@@ -1,6 +1,9 @@
 # Uploads directory
 uploads/
 
+# Configuration (keep config.example.php, ignore actual config)
+config.php
+
 # OS files
 .DS_Store
 Thumbs.db
