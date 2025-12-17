@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Image Uploader</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
         * {
             margin: 0;
@@ -14,7 +15,8 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #000000;
+            color: #FAFAFA;
             min-height: 100vh;
             display: flex;
             justify-content: center;
@@ -23,63 +25,66 @@
         }
 
         .container {
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            background: #1A1A1A;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             padding: 40px;
             max-width: 500px;
             width: 100%;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         h1 {
-            color: #333;
+            color: #FFFFFF;
             margin-bottom: 10px;
             text-align: center;
             font-size: 2em;
+            font-weight: 600;
         }
 
         .subtitle {
-            color: #666;
+            color: rgba(255, 255, 255, 0.7);
             text-align: center;
             margin-bottom: 30px;
             font-size: 0.9em;
         }
 
         .upload-area {
-            border: 3px dashed #667eea;
-            border-radius: 15px;
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 8px;
             padding: 40px 20px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #f8f9ff;
+            background: rgba(255, 255, 255, 0.05);
             margin-bottom: 20px;
         }
 
         .upload-area:hover {
-            border-color: #764ba2;
-            background: #f0f2ff;
+            border-color: rgba(255, 255, 255, 0.5);
+            background: rgba(255, 255, 255, 0.08);
         }
 
         .upload-area.dragover {
-            border-color: #764ba2;
-            background: #e8ebff;
+            border-color: #FFFFFF;
+            background: rgba(255, 255, 255, 0.1);
             transform: scale(1.02);
         }
 
         .upload-icon {
             font-size: 48px;
             margin-bottom: 15px;
+            color: #FFFFFF;
         }
 
         .upload-text {
-            color: #667eea;
+            color: #FFFFFF;
             font-weight: 600;
             margin-bottom: 5px;
         }
 
         .upload-hint {
-            color: #999;
+            color: rgba(255, 255, 255, 0.6);
             font-size: 0.85em;
         }
 
@@ -99,44 +104,46 @@
         .preview-image {
             max-width: 100%;
             max-height: 300px;
-            border-radius: 10px;
+            border-radius: 8px;
             margin-bottom: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .file-info {
-            background: #f8f9ff;
+            background: rgba(255, 255, 255, 0.05);
             padding: 15px;
-            border-radius: 10px;
+            border-radius: 8px;
             margin-bottom: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .file-info p {
             margin: 5px 0;
-            color: #555;
+            color: rgba(255, 255, 255, 0.8);
             font-size: 0.9em;
         }
 
         .file-info strong {
-            color: #333;
+            color: #FFFFFF;
         }
 
         .btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            background: #FFFFFF;
+            color: #000000;
             border: none;
-            border-radius: 10px;
+            border-radius: 8px;
             font-size: 1em;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            transition: all 0.2s ease;
         }
 
         .btn:hover {
+            background: rgba(255, 255, 255, 0.9);
             transform: translateY(-2px);
-            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
         }
 
         .btn:active {
@@ -144,7 +151,8 @@
         }
 
         .btn:disabled {
-            opacity: 0.6;
+            background: rgba(255, 255, 255, 0.3);
+            color: rgba(0, 0, 0, 0.5);
             cursor: not-allowed;
             transform: none;
         }
@@ -159,43 +167,45 @@
         }
 
         .message.success {
-            background: #d4edda;
-            color: #155724;
-            border: 1px solid #c3e6cb;
+            background: rgba(40, 167, 69, 0.2);
+            color: #28A745;
+            border: 1px solid rgba(40, 167, 69, 0.4);
             display: block;
         }
 
         .message.error {
-            background: #f8d7da;
-            color: #721c24;
-            border: 1px solid #f5c6cb;
+            background: rgba(220, 53, 69, 0.2);
+            color: #DC3545;
+            border: 1px solid rgba(220, 53, 69, 0.4);
             display: block;
         }
 
         .remove-btn {
-            background: #dc3545;
-            color: white;
-            border: none;
+            background: transparent;
+            color: #FFFFFF;
+            border: 1px solid rgba(255, 255, 255, 0.3);
             padding: 8px 15px;
             border-radius: 5px;
             cursor: pointer;
             font-size: 0.9em;
             margin-top: 10px;
+            transition: all 0.2s ease;
         }
 
         .remove-btn:hover {
-            background: #c82333;
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.5);
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>📸 Image Uploader</h1>
+        <h1><i class="fas fa-image"></i> Image Uploader</h1>
         <p class="subtitle">Upload and save your images</p>
 
         <form id="uploadForm" enctype="multipart/form-data">
             <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📁</div>
+                <div class="upload-icon"><i class="fas fa-cloud-upload-alt"></i></div>
                 <div class="upload-text">Click to select or drag & drop</div>
                 <div class="upload-hint" id="uploadHint">Supports: JPG, PNG, GIF, WEBP (Max 5MB)</div>
                 <input type="file" id="fileInput" name="image" accept="image/*" required>
@@ -204,10 +214,10 @@
             <div class="preview-container" id="previewContainer">
                 <img id="previewImage" class="preview-image" alt="Preview">
                 <div class="file-info" id="fileInfo"></div>
-                <button type="button" class="remove-btn" id="removeBtn">Remove Image</button>
+                <button type="button" class="remove-btn" id="removeBtn"><i class="fas fa-times"></i> Remove Image</button>
             </div>
 
-            <button type="submit" class="btn" id="submitBtn" disabled>Upload Image</button>
+            <button type="submit" class="btn" id="submitBtn" disabled><i class="fas fa-upload"></i> Upload Image</button>
         </form>
 
         <div class="message" id="message"></div>
@@ -297,9 +307,9 @@
 
                 // Show file info
                 fileInfo.innerHTML = `
-                    <p><strong>File:</strong> ${file.name}</p>
-                    <p><strong>Size:</strong> ${formatFileSize(file.size)}</p>
-                    <p><strong>Type:</strong> ${file.type}</p>
+                    <p><strong><i class="fas fa-file-image"></i> File:</strong> ${file.name}</p>
+                    <p><strong><i class="fas fa-weight"></i> Size:</strong> ${formatFileSize(file.size)}</p>
+                    <p><strong><i class="fas fa-tag"></i> Type:</strong> ${file.type}</p>
                 `;
             };
             reader.readAsDataURL(file);
@@ -328,7 +338,7 @@
             
             const formData = new FormData(uploadForm);
             submitBtn.disabled = true;
-            submitBtn.textContent = 'Uploading...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading...';
 
             try {
                 const response = await fetch(CONFIG.uploadEndpoint, {
@@ -344,12 +354,12 @@
                         fileInput.value = '';
                         previewContainer.classList.remove('active');
                         submitBtn.disabled = true;
-                        submitBtn.textContent = 'Upload Image';
+                        submitBtn.innerHTML = '<i class="fas fa-upload"></i> Upload Image';
                     }, 2000);
                 } else {
                     showMessage('Upload failed: ' + text, 'error');
                     submitBtn.disabled = false;
-                    submitBtn.textContent = 'Upload Image';
+                    submitBtn.innerHTML = '<i class="fas fa-upload"></i> Upload Image';
                 }
             } catch (error) {
                 showMessage('Error: ' + error.message, 'error');
