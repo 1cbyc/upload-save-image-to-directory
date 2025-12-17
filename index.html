@@ -1,3 +1,4 @@
+<!-- I completely forgot about this, I'd come up with something soon -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -196,7 +197,7 @@
             <div class="upload-area" id="uploadArea">
                 <div class="upload-icon">📁</div>
                 <div class="upload-text">Click to select or drag & drop</div>
-                <div class="upload-hint">Supports: JPG, PNG, GIF, WEBP (Max 5MB)</div>
+                <div class="upload-hint" id="uploadHint">Supports: JPG, PNG, GIF, WEBP (Max 5MB)</div>
                 <input type="file" id="fileInput" name="image" accept="image/*" required>
             </div>
 
@@ -213,6 +214,13 @@
     </div>
 
     <script>
+        // Configuration - Load from config.php via fetch or set manually
+        const CONFIG = {
+            maxFileSize: 5 * 1024 * 1024, // 5MB - Update to match config.php
+            allowedExtensions: ['jpg', 'jpeg', 'png', 'gif', 'webp'],
+            uploadEndpoint: 'uploader.php'
+        };
+
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const uploadForm = document.getElementById('uploadForm');
@@ -222,6 +230,11 @@
         const submitBtn = document.getElementById('submitBtn');
         const message = document.getElementById('message');
         const removeBtn = document.getElementById('removeBtn');
+        const uploadHint = document.getElementById('uploadHint');
+
+        // Update hint text based on config
+        const maxSizeMB = Math.round(CONFIG.maxFileSize / (1024 * 1024));
+        uploadHint.textContent = `Supports: ${CONFIG.allowedExtensions.join(', ').toUpperCase()} (Max ${maxSizeMB}MB)`;
 
         // Click to select file
         uploadArea.addEventListener('click', () => fileInput.click());
@@ -259,9 +272,18 @@
                 return;
             }
 
-            // Validate file size (5MB)
-            if (file.size > 5 * 1024 * 1024) {
-                showMessage('File size must be less than 5MB.', 'error');
+            // Validate file extension
+            const fileExt = file.name.split('.').pop().toLowerCase();
+            if (!CONFIG.allowedExtensions.includes(fileExt)) {
+                showMessage(`File type not allowed. Allowed types: ${CONFIG.allowedExtensions.join(', ').toUpperCase()}`, 'error');
+                fileInput.value = '';
+                return;
+            }
+
+            // Validate file size
+            if (file.size > CONFIG.maxFileSize) {
+                const maxSizeMB = Math.round(CONFIG.maxFileSize / (1024 * 1024));
+                showMessage(`File size must be less than ${maxSizeMB}MB.`, 'error');
                 fileInput.value = '';
                 return;
             }
@@ -309,14 +331,14 @@
             submitBtn.textContent = 'Uploading...';
 
             try {
-                const response = await fetch('uploader.php', {
+                const response = await fetch(CONFIG.uploadEndpoint, {
                     method: 'POST',
                     body: formData
                 });
 
                 const text = await response.text();
                 
-                if (text.includes('uploaded')) {
+                if (text.includes('uploaded') || response.ok) {
                     showMessage('Image uploaded successfully!', 'success');
                     setTimeout(() => {
                         fileInput.value = '';
